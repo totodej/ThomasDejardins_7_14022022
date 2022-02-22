@@ -92,6 +92,39 @@ header img {
     position: relative;
 }
 
+
+#ingredients-list, #appliances-list, #ustensils-list {
+    display: none;
+    list-style-type: none;
+    padding: 0px;
+    color: white; 
+    grid-template-columns: repeat(3, 200px);
+    position: absolute;
+}
+
+#ingredients-list {
+    background-color: #3282F7;
+}
+
+#appliances-list {
+    background-color: #68D9A4;
+    margin-left: 15px;
+}
+
+#ustensils-list {
+    background-color: #ED6454;
+    margin-left: 15px;
+}
+
+#ingredients-list li, #appliances-list li, #ustensils-list li {
+    padding: 5px;
+}
+
+#ingredients-list li a, #appliances-list li a, #ustensils-list li a {
+    color: white;
+    text-decoration: none;
+}
+
 /******************************************************/
 
 #cards {
