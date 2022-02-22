@@ -1,5 +1,3 @@
-import { recipes } from "./recipes.js";
-
 const ingredientsArray = [];
 const appliancesArray = [];
 const ustensilsArray = [];
@@ -13,7 +11,8 @@ const inputIngredients = document.getElementById("input-ingredients");
 const inputAppliances = document.getElementById("input-appliances");
 const inputUstensils = document.getElementById("input-ustensils");
 const recipeButton = document.getElementById("recipe-button");
-
+const tags = document.getElementById("tags");
+const tagsArray = [];
 
 /////////////////////////////////////////////////////////////
 
@@ -127,6 +126,7 @@ function filterByIngredients(e){
         displayIngredientsList(ingredientsResult);
         showDropdown(ingredientsList);
         inputIngredients.style.width = "566px";
+        addIngredientsTagsToArray();
     }else if(ingredientValue.length === 0){
         hideDropdown(ingredientsList);
         refreshList(ingredientsList);
@@ -145,6 +145,7 @@ function filterByAppliances(e){
         displayAppliancesList(appliancesResult);
         showDropdown(appliancesList);
         inputAppliances.style.width = "566px";
+        addAppliancesTagsToArray();
     }else if(applianceValue.length === 0){
         hideDropdown(appliancesList);
         refreshList(appliancesList);
@@ -163,12 +164,84 @@ function filterByUstensils(e){
         displayUstensilsList(ustensilsResult);
         showDropdown(ustensilsList);
         inputUstensils.style.width = "566px";
+        addUstensilsTagsToArray();
     }else if(ustensilValue.length === 0){
         hideDropdown(ustensilsList);
         refreshList(ustensilsList);
         displayUstensilsList(ustensilsArray);
         inputUstensils.style.width = "140px";
     }
+}
+
+/////////////////////////////////////////////////////////////
+
+// add ingredients tags, appliances tags, ustensils tags to tagsArray
+function addIngredientsTagsToArray(){
+    const ingredients = document.querySelectorAll("#ingredients-list li a");
+
+    ingredients.forEach(function(ingredient){
+        ingredient.addEventListener("click", function(){
+            let targetted = ingredient.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
+
+            if(!tagsArray.find(o => o.targetted === targetted)){
+                let select = {keys: "ingredient", label: ingredient.textContent,targetted: targetted};
+                tags.innerHTML += `<button class="ingredient-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+
+                tagsArray.push(select);                
+            }
+            console.log(tagsArray);
+            deleteTag();
+        })
+    })  
+}
+
+function addAppliancesTagsToArray(){
+    const appliances = document.querySelectorAll("#appliances-list li a");
+
+    appliances.forEach(function(appliance){
+        appliance.addEventListener("click", function(){
+            let targetted = appliance.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
+
+            if(!tagsArray.find(o => o.targetted === targetted)){
+                let select = {keys: "appareils", label: appliance.textContent,targetted: targetted};
+                tags.innerHTML += `<button class="appliance-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+
+                tagsArray.push(select);
+            }
+            console.log(tagsArray);
+            deleteTag();
+        })
+    })
+}
+
+function addUstensilsTagsToArray(){
+    const ustensils = document.querySelectorAll("#ustensils-list li a");
+
+    ustensils.forEach(function(ustensil){
+        ustensil.addEventListener("click", function(){
+            let targetted = ustensil.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
+            if(!tagsArray.find(o => o.targetted === targetted)){
+                let select = {keys: "ustensiles", label: ustensil.textContent,targetted: targetted};
+                tags.innerHTML += `<button class="ustensil-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+
+                tagsArray.push(select);
+            }
+            console.log(tagsArray);
+            deleteTag();
+        })
+    })
+}
+
+function deleteTag(){
+    const activeTags = document.querySelectorAll("#tags button");
+
+    activeTags.forEach(function(activeTag, index){
+        activeTag.addEventListener("click", function(e){
+            tagsArray.splice(index, 1);
+            tags.removeChild(tags.childNodes[index]);
+            console.log(tagsArray)
+        })
+    }) 
 }
 
 /////////////////////////////////////////////////////////////
@@ -190,6 +263,7 @@ function init(){
             inputIngredients.style.width = "566px";
             inputAppliances.style.width = "140px";
             inputUstensils.style.width = "140px";
+            addIngredientsTagsToArray()
         }
     });
     
@@ -204,6 +278,7 @@ function init(){
             inputAppliances.style.width = "566px";
             inputIngredients.style.width = "140px";
             inputUstensils.style.width = "140px";
+            addAppliancesTagsToArray();
         }
     });
     
@@ -218,6 +293,7 @@ function init(){
             inputUstensils.style.width = "566px";
             inputIngredients.style.width = "140px";
             inputAppliances.style.width = "140px";
+            addUstensilsTagsToArray();
         }
     })
 
@@ -225,11 +301,7 @@ function init(){
     inputIngredients.addEventListener("input", filterByIngredients);
     inputAppliances.addEventListener("input", filterByAppliances);
     inputUstensils.addEventListener("input", filterByUstensils);
+
 }
 
 init();
-
-
-
-
-
