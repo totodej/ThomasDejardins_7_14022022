@@ -91,3 +91,76 @@ header img {
 .dropdown-ingredients, .dropdown-appliances, .dropdown-ustensils {
     position: relative;
 }
+
+/******************************************************/
+
+#cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 50px;
+    width: 95%;
+    margin: auto;
+}
+
+article {
+    width: 380px;
+    height: 364px;
+    margin: auto;
+    border: none;
+}
+
+.card-img-top {
+    height: 178px;
+    background-color: #C7BEBE;
+}
+
+.card-body {
+    height: 186px;
+    background-color: #E7E7E7;
+    border-bottom-left-radius: calc(0.25rem - 1px);
+    border-bottom-right-radius: calc(0.25rem - 1px)
+}
+
+.card-body-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    height: 53px;
+}
+
+.card-body-header h1 {
+    font-size: 18px;
+    font-weight: normal;
+    width: 260px;
+    margin-bottom: 0px;
+}
+
+.card-body-header p {
+    font-weight: bold;
+    margin-block-end: 0px;
+}
+
+.card-body-description {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-body-description p {
+    width: 170px;
+    height: 72px;
+    font-size: 11px;
+    line-height: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+}
+
+.card-body-description ul {
+    width: 170px;
+    font-size: 11px;
+    line-height: 12px;
+    list-style-type: none;
+    padding: 0px;
+}
