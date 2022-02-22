@@ -1,3 +1,5 @@
+import { recipes } from "./recipes.js";
+
 const ingredientsArray = [];
 const appliancesArray = [];
 const ustensilsArray = [];
@@ -305,3 +307,9 @@ function init(){
 }
 
 init();
+
+
+
+
+
+
