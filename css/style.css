@@ -1,0 +1,93 @@
+header {
+    margin: auto;
+}
+
+header img {
+    margin: auto;
+    display: block;
+    width: 262px;
+    margin-top: 40px;
+}
+
+#recipe-input-group {
+    margin: auto;
+    width: 89.7%;
+}
+
+#recipe-input {
+    background-color: #E7E7E7;
+    border: none;
+}
+
+#recipe-button {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    background-color: #E7E7E7;
+    border-radius: 0px 5px 5px 0px;
+    border: none;
+}
+
+/******************************************************/
+
+#dropdowns {
+    margin: auto;
+    width: 89.7%;
+    margin-bottom: 25px;
+    display: flex;
+}
+
+.dropdown-ingredients-input, .dropdown-appliances-input, .dropdown-ustensils-input {
+    display: flex;
+}
+
+#input-ingredients, #input-appliances, #input-ustensils {
+    font-size: 18px;
+    color: white;
+    position: relative;
+    width: 140px;
+    text-align: left;
+    padding: 19px 0px 19px 10px;
+    border-radius: 0.25rem 0 0 0.25rem;
+    border: none;
+}
+
+#input-ingredients {
+    background-color: #3282F7;
+}
+
+#input-appliances {
+    background-color: #68D9A4;
+    margin-left: 15px;
+}
+
+#input-ustensils {
+    background-color: #ED6454;
+    margin-left: 15px;
+}
+
+#input-ingredients::placeholder, #input-appliances::placeholder, #input-ustensils::placeholder  {
+    color: white;
+}
+
+#chevron-ingredients, #chevron-appliances, #chevron-ustensils {
+    border: none;
+    color: white;
+    padding: 22px 10px 19px 10px;
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+
+#chevron-ingredients {
+    background-color: #3282F7;
+}
+
+#chevron-appliances {
+    background-color: #68D9A4;
+}
+
+#chevron-ustensils {
+    background-color: #ED6454;
+}
+
+.dropdown-ingredients, .dropdown-appliances, .dropdown-ustensils {
+    position: relative;
+}
