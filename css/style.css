@@ -127,7 +127,11 @@ header img {
     padding: 0px;
     color: white; 
     grid-template-columns: repeat(3, 200px);
+    border-radius: 0 0 0.25rem 0.25rem;
     position: absolute;
+    top: 62px;
+    height: 210px;
+    overflow: scroll; 
 }
 
 #ingredients-list {
@@ -146,7 +150,7 @@ header img {
 
 
 #ingredients-list li, #appliances-list li, #ustensils-list li {
-    padding: 5px;
+    padding: 5px 15px;
 }
 
 #ingredients-list li a, #appliances-list li a, #ustensils-list li a {
