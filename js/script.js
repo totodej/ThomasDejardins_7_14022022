@@ -1,4 +1,4 @@
-import { recipes } from "./recipes.js";
+import { receipts } from "./receipts.js";
 
 const ingredientsArray = [];
 const appliancesArray = [];
@@ -14,12 +14,13 @@ const inputAppliances = document.getElementById("input-appliances");
 const inputUstensils = document.getElementById("input-ustensils");
 const recipeButton = document.getElementById("recipe-button");
 const tags = document.getElementById("tags");
-const tagsArray = [];
+const tagsArray = [{key: "global", label: "global", targetted: []}, {key: "ingredients", label: "ingredients", targetted: []}, {key: "appareils", label: "appareils", targetted: []}, {key: "ustensils", label: "ustensils", targetted: []}];
+const referenceArray = [{key: "ingredients", data: []}, {key: "appareils", data: []}, {key: "ustensiles", data: []}];
 
 /////////////////////////////////////////////////////////////
 
 function getRecipe(){
-    recipes.forEach(function(recipe){
+    receipts.forEach(function(recipe){
         const ingredients = recipe.ingredients;
         const ustensils = recipe.ustensils;
         const appliance = recipe.appliance;
@@ -70,6 +71,106 @@ function getRecipe(){
         if(appliancesArray.indexOf(appliance) === -1){
             appliancesArray.push(appliance)  
         }
+    }
+}
+
+/////////////////////////////////////////////////////////////
+
+function reference(){
+    aboutIngredients();
+    aboutAppliances();
+    aboutUstensils();
+
+    function aboutIngredients(){
+        ingredientsArray.forEach(function(ingredientArray){
+            let ingredientKey = ingredientArray.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            referenceArray.forEach(function(object){
+                if(object.key === "ingredients"){   
+                    if(!object.data.find(element => element.key === ingredientKey)){
+                        object.data.push({key: ingredientKey, receipts: []});
+                    }
+                } 
+            });
+        });
+
+        receipts.forEach(function(recipe){
+            const recipeId = recipe.id;
+            recipe.ingredients.forEach(function(ingredient){
+                const ingredientName = ingredient.ingredient.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+                referenceArray.forEach(function(object){   
+                    if(object.key === "ingredients"){   
+                        object.data.forEach(function(ingredientData){
+                            if(ingredientName === ingredientData.key){
+                                ingredientData.receipts.push(recipeId);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    }
+    
+    function aboutAppliances(){
+        appliancesArray.forEach(function(appliance){
+            let applianceKey = appliance.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+            referenceArray.forEach(function(object){
+                if(object.key === "appareils"){
+                    if(!object.data.find(element => element.key === applianceKey)){
+                        object.data.push({key: applianceKey, receipts: []});
+                    } 
+                }
+            });
+        });
+    
+        receipts.forEach(function(recipe){
+            const recipeId = recipe.id;
+            const applianceName = recipe.appliance.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            referenceArray.forEach(function(object){   
+                if(object.key === "appareils"){   
+                    object.data.forEach(function(applianceData){
+                        if(applianceName === applianceData.key){
+                            applianceData.receipts.push(recipeId);
+                        }
+                    });
+                }
+            });
+            
+        });
+    }
+
+    function aboutUstensils(){
+        ustensilsArray.forEach(function(ustensil){
+            let ustensilKey = ustensil.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+            referenceArray.forEach(function(object){
+                if(object.key === "ustensiles"){
+                    if(!object.data.find(element => element.key === ustensilKey)){
+                        object.data.push({key: ustensilKey, receipts: []});
+                    } 
+                }
+            });
+        });
+
+        receipts.forEach(function(recipe){
+            const recipeId = recipe.id;
+            recipe.ustensils.forEach(function(ustensil){
+                const ustensilName = ustensil.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+                referenceArray.forEach(function(object){   
+                    if(object.key === "ustensiles"){   
+                        object.data.forEach(function(ustensilData){
+                            if(ustensilName === ustensilData.key){
+                                ustensilData.receipts.push(recipeId);
+                            }
+                        });
+                    }
+                });
+            });
+        });
     }
 }
 
@@ -183,15 +284,20 @@ function addIngredientsTagsToArray(){
 
     ingredients.forEach(function(ingredient){
         ingredient.addEventListener("click", function(){
-            let targetted = ingredient.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
+            let targettedIngredient = ingredient.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            if(!tagsArray.find(o => o.targetted === targetted)){
-                let select = {keys: "ingredient", label: ingredient.textContent,targetted: targetted};
-                tags.innerHTML += `<button class="ingredient-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
-
-                tagsArray.push(select);                
-            }
-            console.log(tagsArray);
+            tagsArray.forEach(function(object){
+                if(object.key === "ingredients"){
+                    
+                    if(!object.targetted.find(o => o.key === targettedIngredient)){
+                        const targettedObject = {key: targettedIngredient, label: ingredient.textContent};
+                        object.targetted.push(targettedObject);
+                        tags.innerHTML += `<button class="ingredient-tag">${targettedObject.label}<i class="fa-regular fa-circle-xmark"></i></button>`;
+                    }
+                }
+            });
+            
+            console.log("tagsArray", tagsArray);
             deleteTag();
         })
     })  
@@ -202,15 +308,20 @@ function addAppliancesTagsToArray(){
 
     appliances.forEach(function(appliance){
         appliance.addEventListener("click", function(){
-            let targetted = appliance.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
+            let targettedAppliance = appliance.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-            if(!tagsArray.find(o => o.targetted === targetted)){
-                let select = {keys: "appareils", label: appliance.textContent,targetted: targetted};
-                tags.innerHTML += `<button class="appliance-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+            tagsArray.forEach(function(object){
+                if(object.key === "appareils"){
+                    
+                    if(!object.targetted.find(o => o.key === targettedAppliance)){
+                        const targettedObject = {key: targettedAppliance, label: appliance.textContent};
+                        object.targetted.push(targettedObject);
+                        tags.innerHTML += `<button class="appliance-tag">${targettedObject.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+                    }
+                }
+            });
 
-                tagsArray.push(select);
-            }
-            console.log(tagsArray);
+            console.log("tagsArray", tagsArray);
             deleteTag();
         })
     })
@@ -221,14 +332,20 @@ function addUstensilsTagsToArray(){
 
     ustensils.forEach(function(ustensil){
         ustensil.addEventListener("click", function(){
-            let targetted = ustensil.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"");
-            if(!tagsArray.find(o => o.targetted === targetted)){
-                let select = {keys: "ustensiles", label: ustensil.textContent,targetted: targetted};
-                tags.innerHTML += `<button class="ustensil-tag">${select.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+            let targettedUstensil = ustensil.textContent.split(' ').join('-').toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g,"").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            tagsArray.forEach(function(object){
+                if(object.key === "ustensils"){
+                    
+                    if(!object.targetted.find(o => o.key === targettedUstensil)){
+                        const targettedObject = {key: targettedUstensil, label: ustensil.textContent};
+                        object.targetted.push(targettedObject);
+                        tags.innerHTML += `<button class="ustensil-tag">${targettedObject.label}<i class="fa-solid fa-circle-xmark"></i></button>`;
+                    }
+                }
+            });
 
-                tagsArray.push(select);
-            }
-            console.log(tagsArray);
+            console.log("tagsArray", tagsArray);
             deleteTag();
         })
     })
@@ -240,6 +357,7 @@ function deleteTag(){
     activeTags.forEach(function(activeTag, index){
         activeTag.addEventListener("click", function(e){
             tagsArray.splice(index, 1);
+            console.log(tags.childNodes[index])
             tags.removeChild(tags.childNodes[index]);
             console.log(tagsArray)
         })
@@ -250,6 +368,7 @@ function deleteTag(){
 
 function init(){
     getRecipe();
+    reference();
     displayIngredientsList(ingredientsArray);
     displayAppliancesList(appliancesArray);
     displayUstensilsList(ustensilsArray);
@@ -285,6 +404,51 @@ function init(){
     });
     
     chevronUstensils.addEventListener("click", function(){
+        if(ustensilsList.style.display === "grid"){
+            hideDropdown(ustensilsList);
+            inputUstensils.style.width = "140px";
+        } else {
+            showDropdown(ustensilsList);
+            hideDropdown(ingredientsList);
+            hideDropdown(appliancesList);
+            inputUstensils.style.width = "566px";
+            inputIngredients.style.width = "140px";
+            inputAppliances.style.width = "140px";
+            addUstensilsTagsToArray();
+        }
+    })
+
+    inputIngredients.addEventListener("input", function(){
+        if(ingredientsList.style.display === "grid"){
+            hideDropdown(ingredientsList);
+            inputIngredients.style.width = "140px";
+        } else {
+            showDropdown(ingredientsList);
+            hideDropdown(appliancesList);
+            hideDropdown(ustensilsList);
+            inputIngredients.style.width = "566px";
+            inputAppliances.style.width = "140px";
+            inputUstensils.style.width = "140px";
+            addIngredientsTagsToArray()
+        }
+    })
+
+    inputAppliances.addEventListener("input", function(){
+        if(appliancesList.style.display === "grid"){
+            hideDropdown(appliancesList);
+            inputAppliances.style.width = "140px";
+        } else {
+            showDropdown(appliancesList);
+            hideDropdown(ingredientsList);
+            hideDropdown(ustensilsList);
+            inputAppliances.style.width = "566px";
+            inputIngredients.style.width = "140px";
+            inputUstensils.style.width = "140px";
+            addAppliancesTagsToArray();
+        }
+    });
+
+    inputUstensils.addEventListener("input", function(){
         if(ustensilsList.style.display === "grid"){
             hideDropdown(ustensilsList);
             inputUstensils.style.width = "140px";
