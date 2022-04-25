@@ -21,10 +21,10 @@ const referenceArray = [
   { key: "ustensils", data: [] },
 ];
 const formStateArray = [
-  { key: "global", data: [] },
-  { key: "ingredients", data: [] },
-  { key: "appareils", data: [] },
-  { key: "ustensils", data: [] },
+  { key: "global", value: "", data: [] },
+  { key: "ingredients", value: undefined, data: [] },
+  { key: "appareils", value: undefined, data: [] },
+  { key: "ustensils", value: undefined, data: [] },
 ];
 let receiptsToShow = [];
 let receiptsIdToShow = [];
@@ -389,7 +389,6 @@ function reference() {
 
 /////////////////////////////////////////////////////////////
 
-// put the selected word to the formStateArray
 function formState() {
   function filterByNamesDescriptions() {
     const recipeValue = recipeInput.value;
@@ -400,9 +399,9 @@ function formState() {
       .replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-
     formStateArray.forEach(function (objectFormState) {
       if (objectFormState.key === "global") {
+        objectFormState.value = recipeValue;
         if (recipeValue.length >= 3) {
           objectFormState.data = [];
           referenceArray.forEach(function (objectReferenceArray) {
@@ -412,7 +411,6 @@ function formState() {
               if (dataObjectReferenceArray.key.includes(recipeValueKey)) {
                 objectFormState.data.push({
                   key: dataObjectReferenceArray.key,
-                  label: recipeValueKey,
                 });
               }
             });
@@ -438,7 +436,7 @@ function formState() {
       displayIngredientsList(ingredientsResult);
       showDropdown(ingredientsList);
       inputIngredients.style.width = "566px";
-      addIngredientsTagsToArray();
+      addIngredientsTagsToFormState();
     } else {
       hideDropdown(ingredientsList);
       refreshList(ingredientsList);
@@ -459,7 +457,7 @@ function formState() {
       displayAppliancesList(appliancesResult);
       showDropdown(appliancesList);
       inputAppliances.style.width = "566px";
-      addAppliancesTagsToArray();
+      addAppliancesTagsToFormState();
     } else {
       hideDropdown(appliancesList);
       refreshList(appliancesList);
@@ -480,7 +478,7 @@ function formState() {
       displayUstensilsList(ustensilsResult);
       showDropdown(ustensilsList);
       inputUstensils.style.width = "566px";
-      addUstensilsTagsToArray();
+      addUstensilsTagsToFormState();
     } else {
       hideDropdown(ustensilsList);
       refreshList(ustensilsList);
@@ -518,8 +516,8 @@ function formState() {
 
 /////////////////////////////////////////////////////////////
 
-// add ingredients tags to the tagsArray
-function addIngredientsTagsToArray() {
+// add ingredients tags to the FormStateArray
+function addIngredientsTagsToFormState() {
   const ingredients = document.querySelectorAll("#ingredients-list li a");
 
   ingredients.forEach(function (ingredient) {
@@ -537,10 +535,10 @@ function addIngredientsTagsToArray() {
           if (!object.data.find((o) => o.key === targettedIngredient)) {
             const targettedObject = {
               key: targettedIngredient,
-              label: ingredient.textContent,
+              value: ingredient.textContent,
             };
             object.data.push(targettedObject);
-            tags.innerHTML += `<button class="ingredient-tag">${targettedObject.label} <i class="far">&#xf057</i></button>`;
+            tags.innerHTML += `<button class="ingredient-tag">${targettedObject.value} <i class="far">&#xf057</i></button>`;
           }
         }
       });
@@ -551,8 +549,8 @@ function addIngredientsTagsToArray() {
   });
 }
 
-// add appliances tags to the tagsArray
-function addAppliancesTagsToArray() {
+// add appliances tags to the FormStateArray
+function addAppliancesTagsToFormState() {
   const appliances = document.querySelectorAll("#appliances-list li a");
 
   appliances.forEach(function (appliance) {
@@ -570,10 +568,10 @@ function addAppliancesTagsToArray() {
           if (!object.data.find((o) => o.key === targettedAppliance)) {
             const targettedObject = {
               key: targettedAppliance,
-              label: appliance.textContent,
+              value: appliance.textContent,
             };
             object.data.push(targettedObject);
-            tags.innerHTML += `<button class="appliance-tag">${targettedObject.label} <i class="far">&#xf057</i></button>`;
+            tags.innerHTML += `<button class="appliance-tag">${targettedObject.value} <i class="far">&#xf057</i></button>`;
           }
         }
       });
@@ -584,8 +582,8 @@ function addAppliancesTagsToArray() {
   });
 }
 
-// add ustensils tags to the tagsArray
-function addUstensilsTagsToArray() {
+// add ustensils tags to the FormStateArray
+function addUstensilsTagsToFormState() {
   const ustensils = document.querySelectorAll("#ustensils-list li a");
 
   ustensils.forEach(function (ustensil) {
@@ -603,10 +601,10 @@ function addUstensilsTagsToArray() {
           if (!object.data.find((o) => o.key === targettedUstensil)) {
             const targettedObject = {
               key: targettedUstensil,
-              label: ustensil.textContent,
+              value: ustensil.textContent,
             };
             object.data.push(targettedObject);
-            tags.innerHTML += `<button class="ustensil-tag">${targettedObject.label} <i class="far">&#xf057</i></button>`;
+            tags.innerHTML += `<button class="ustensil-tag">${targettedObject.value} <i class="far">&#xf057</i></button>`;
           }
         }
       });
@@ -617,7 +615,7 @@ function addUstensilsTagsToArray() {
   });
 }
 
-// take off the selected word of the tagsArray
+// take off the selected word of the FormStateArray
 function deleteTag() {
   const activeTags = document.querySelectorAll("#tags button");
 
@@ -736,44 +734,59 @@ function refreshView() {
     });
     noReceipts.style.display = "none";
     cards.style.display = "grid";
-  }
-
-  if (receiptsToShow.length === 0) {
+  } else if (receiptsToShow.length === 0) {
     noReceipts.style.display = "block";
     cards.style.display = "none";
+
+    formStateArray.forEach(function (objectFormStateArray1) {
+      if (
+        objectFormStateArray1.key === "global" &&
+        objectFormStateArray1.data.length === 0
+      ) {
+        formStateArray.forEach(function (objectFormStateArray2) {
+          if (
+            objectFormStateArray2.key === "ingredients" &&
+            objectFormStateArray2.data.length === 0
+          ) {
+            formStateArray.forEach(function (objectFormStateArray3) {
+              if (
+                objectFormStateArray3.key === "appareils" &&
+                objectFormStateArray3.data.length === 0
+              ) {
+                formStateArray.forEach(function (objectFormStateArray4) {
+                  if (
+                    objectFormStateArray4.key === "ustensils" &&
+                    objectFormStateArray4.data.length === 0
+                  ) {
+                    if (recipeInput.value.length > 3) {
+                      noReceipts.style.display = "block";
+                      cards.style.display = "none";
+                    } else {
+                      receipts.forEach(function (recipe) {
+                        displayCard(recipe);
+                        noReceipts.style.display = "none";
+                        cards.style.display = "grid";
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   }
 
-  formStateArray.forEach(function (objectFormStateArray1) {
-    if (
-      objectFormStateArray1.key === "global" &&
-      objectFormStateArray1.data.length === 0
-    ) {
-      formStateArray.forEach(function (objectFormStateArray2) {
-        if (
-          objectFormStateArray2.key === "ingredients" &&
-          objectFormStateArray2.data.length === 0
-        ) {
-          formStateArray.forEach(function (objectFormStateArray3) {
-            if (
-              objectFormStateArray3.key === "appareils" &&
-              objectFormStateArray3.data.length === 0
-            ) {
-              formStateArray.forEach(function (objectFormStateArray4) {
-                if (
-                  objectFormStateArray4.key === "ustensils" &&
-                  objectFormStateArray4.data.length === 0
-                ) {
-                  receipts.forEach(function (recipe) {
-                    displayCard(recipe);
-                    noReceipts.style.display = "none";
-                    cards.style.display = "grid";
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
+  formStateArray.forEach(function (objectFormStateArray) {
+    if (objectFormStateArray.key === "global") {
+      if (
+        objectFormStateArray.value.length > 3 &&
+        objectFormStateArray.data.length === 0
+      ) {
+        noReceipts.style.display = "block";
+        cards.style.display = "none";
+      }
     }
   });
 
@@ -838,7 +851,7 @@ function init() {
       inputIngredients.style.width = "566px";
       inputAppliances.style.width = "140px";
       inputUstensils.style.width = "140px";
-      addIngredientsTagsToArray();
+      addIngredientsTagsToFormState();
     }
   });
 
@@ -853,7 +866,7 @@ function init() {
       inputAppliances.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputUstensils.style.width = "140px";
-      addAppliancesTagsToArray();
+      addAppliancesTagsToFormState();
     }
   });
 
@@ -868,7 +881,7 @@ function init() {
       inputUstensils.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputAppliances.style.width = "140px";
-      addUstensilsTagsToArray();
+      addUstensilsTagsToFormState();
     }
   });
 
@@ -880,7 +893,7 @@ function init() {
       inputIngredients.style.width = "566px";
       inputAppliances.style.width = "140px";
       inputUstensils.style.width = "140px";
-      addIngredientsTagsToArray();
+      addIngredientsTagsToFormState();
     }
   });
 
@@ -892,7 +905,7 @@ function init() {
       inputAppliances.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputUstensils.style.width = "140px";
-      addAppliancesTagsToArray();
+      addAppliancesTagsToFormState();
     }
   });
 
@@ -904,7 +917,7 @@ function init() {
       inputUstensils.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputAppliances.style.width = "140px";
-      addUstensilsTagsToArray();
+      addUstensilsTagsToFormState();
     }
   });
 }
