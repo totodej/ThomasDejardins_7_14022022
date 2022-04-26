@@ -9,6 +9,16 @@ const ustensilsList = document.getElementById("ustensils-list");
 const chevronIngredients = document.getElementById("chevron-ingredients");
 const chevronAppliances = document.getElementById("chevron-appliances");
 const chevronUstensils = document.getElementById("chevron-ustensils");
+const chevronUpIngredients = document.getElementById("chevron-up-ingredients");
+const chevronUpAppliances = document.getElementById("chevron-up-appliances");
+const chevronUpUstensils = document.getElementById("chevron-up-ustensils");
+const chevronDownIngredients = document.getElementById(
+  "chevron-down-ingredients"
+);
+const chevronDownAppliances = document.getElementById(
+  "chevron-down-appliances"
+);
+const chevronDownUstensils = document.getElementById("chevron-down-ustensils");
 const inputIngredients = document.getElementById("input-ingredients");
 const inputAppliances = document.getElementById("input-appliances");
 const inputUstensils = document.getElementById("input-ustensils");
@@ -874,10 +884,18 @@ function init() {
     if (ingredientsList.style.display === "grid") {
       hideDropdown(ingredientsList);
       inputIngredients.style.width = "140px";
+      chevronUpIngredients.style.display = "none";
+      chevronDownIngredients.style.display = "contents";
     } else {
       showDropdown(ingredientsList);
       hideDropdown(appliancesList);
       hideDropdown(ustensilsList);
+      chevronUpIngredients.style.display = "contents";
+      chevronDownIngredients.style.display = "none";
+      chevronUpAppliances.style.display = "none";
+      chevronDownAppliances.style.display = "contents";
+      chevronUpUstensils.style.display = "none";
+      chevronDownUstensils.style.display = "contents";
       inputIngredients.style.width = "566px";
       inputAppliances.style.width = "140px";
       inputUstensils.style.width = "140px";
@@ -889,10 +907,18 @@ function init() {
     if (appliancesList.style.display === "grid") {
       hideDropdown(appliancesList);
       inputAppliances.style.width = "140px";
+      chevronUpAppliances.style.display = "none";
+      chevronDownAppliances.style.display = "contents";
     } else {
       showDropdown(appliancesList);
       hideDropdown(ingredientsList);
       hideDropdown(ustensilsList);
+      chevronUpIngredients.style.display = "none";
+      chevronDownIngredients.style.display = "contents";
+      chevronUpAppliances.style.display = "contents";
+      chevronDownAppliances.style.display = "none";
+      chevronUpUstensils.style.display = "none";
+      chevronDownUstensils.style.display = "contents";
       inputAppliances.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputUstensils.style.width = "140px";
@@ -904,10 +930,18 @@ function init() {
     if (ustensilsList.style.display === "grid") {
       hideDropdown(ustensilsList);
       inputUstensils.style.width = "140px";
+      chevronUpUstensils.style.display = "none";
+      chevronDownUstensils.style.display = "contents";
     } else {
       showDropdown(ustensilsList);
       hideDropdown(ingredientsList);
       hideDropdown(appliancesList);
+      chevronUpIngredients.style.display = "none";
+      chevronDownIngredients.style.display = "contents";
+      chevronUpAppliances.style.display = "none";
+      chevronDownAppliances.style.display = "contents";
+      chevronUpUstensils.style.display = "contents";
+      chevronDownUstensils.style.display = "none";
       inputUstensils.style.width = "566px";
       inputIngredients.style.width = "140px";
       inputAppliances.style.width = "140px";
