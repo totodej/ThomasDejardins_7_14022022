@@ -10,12 +10,15 @@ header img {
 }
 
 #recipe-input-group {
+  position: relative;
   margin: auto;
   width: 89.7%;
+  background-color: #e7e7e7;
+  border-radius: 5px;
 }
 
 #recipe-input {
-  background-color: #e7e7e7;
+  background-color: transparent;
   border: none;
 }
 
@@ -23,8 +26,15 @@ header img {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
   background-color: #e7e7e7;
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 5px;
   border: none;
+}
+
+.fa-search {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  font-size: 20px;
 }
 
 /******************************************************/
@@ -322,8 +332,13 @@ article {
   }
 }
 
-@media screen and (max-width: 345px) {
+@media screen and (max-width: 330px) {
   #recipe-input {
     font-size: 0.9rem;
+  }
+
+  .fa-search {
+    font-size: 0.9rem;
+    top: 12.5px;
   }
 }
