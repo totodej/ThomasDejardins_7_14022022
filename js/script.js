@@ -1,8 +1,8 @@
 import { receipts } from "./receipts.js";
 
-const ingredientsArray = [];
-const appliancesArray = [];
-const ustensilsArray = [];
+let ingredientsArray = [];
+let appliancesArray = [];
+let ustensilsArray = [];
 const ingredientsList = document.getElementById("ingredients-list");
 const appliancesList = document.getElementById("appliances-list");
 const ustensilsList = document.getElementById("ustensils-list");
@@ -767,6 +767,9 @@ function refreshView() {
   const noReceipts = document.getElementById("no-receipts");
 
   cards.innerHTML = "";
+  ingredientsArray = [];
+  appliancesArray = [];
+  ustensilsArray = [];
 
   if (receiptsToShow.length > 0) {
     receiptsToShow.forEach(function (recipeToShow) {
@@ -807,6 +810,7 @@ function refreshView() {
                         noReceipts.style.display = "none";
                         cards.style.display = "grid";
                       });
+                      displayLists(receipts);
                     }
                   }
                 });
@@ -829,6 +833,8 @@ function refreshView() {
       }
     }
   });
+
+  displayLists(receiptsToShow);
 
   function displayCard(recipe) {
     const cards = document.getElementById("cards");
@@ -868,6 +874,41 @@ function refreshView() {
       return article;
     }
   }
+}
+
+function displayLists(array) {
+  array.forEach(function (element) {
+    const ingredients = element.ingredients;
+    const ustensils = element.ustensils;
+    const appliance = element.appliance;
+
+    setArrays(ingredients, ustensils, appliance);
+
+    function setArrays(ingredients, ustensils, appliance) {
+      ingredients.forEach(function (ingredient) {
+        if (ingredientsArray.indexOf(ingredient.ingredient) === -1) {
+          ingredientsArray.push(ingredient.ingredient);
+        }
+      });
+
+      ustensils.forEach(function (ustensil) {
+        if (ustensilsArray.indexOf(ustensil) === -1) {
+          ustensilsArray.push(ustensil);
+        }
+      });
+
+      if (appliancesArray.indexOf(appliance) === -1) {
+        appliancesArray.push(appliance);
+      }
+    }
+  });
+
+  displayIngredientsList(ingredientsArray);
+  displayAppliancesList(appliancesArray);
+  displayUstensilsList(ustensilsArray);
+  addIngredientsTagsToFormState();
+  addAppliancesTagsToFormState();
+  addUstensilsTagsToFormState();
 }
 
 /////////////////////////////////////////////////////////////
